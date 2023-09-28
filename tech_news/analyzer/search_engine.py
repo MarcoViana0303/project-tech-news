@@ -35,5 +35,18 @@ def search_by_date(date):
 
 # Requisito 9
 def search_by_category(category):
-    """Seu código deve vir aqui"""
-    raise NotImplementedError
+    # Inicializa uma lista vazia para armazenar os resultados
+    news_list = []
+
+    # Realiza a busca no banco de dados por categoria (case insensitive)
+    results = (
+        db.news
+        .find({"category": {"$regex": f"^{category}$", "$options": "i"}}))
+
+    # Itera sobre os resultados da busca
+    for news in results:
+        # Adiciona cada resultado como uma tupla (título, URL) à lista
+        news_list.append((news["title"], news["url"]))
+
+    # Retorna a lista de notícias encontradas
+    return news_list
