@@ -66,8 +66,55 @@ def scrape_next_page_link(html_content):
 
 # Requisito 4
 def scrape_news(html_content):
-    """Seu código deve vir aqui"""
-    raise NotImplementedError
+    try:
+        # Criando um seletor Parsel a partir do conteúdo HTML
+        selector = Selector(text=html_content)
+
+        # Extrair informações da notícia
+        url = (
+            selector.css('link[rel=canonical]::attr(href)').get()
+            )
+        title = (
+            selector.css('h1.entry-title::text')
+            .get().strip()
+        )
+        timestamp = (
+            selector.css('li.meta-date::text')
+            .get()
+        )
+        writer = (
+            selector.css('span.author a::text')
+            .get()
+        )
+        reading_time = (
+            int(selector.css('.meta-reading-time::text')
+                .re_first(r'\d+'))
+        )
+        summary = (
+            ''.join(selector.css('.entry-content > p:first-of-type *::text')
+                    .getall()).strip()
+        )
+        category = (
+            selector.css('.category-style span.label::text')
+            .get()
+        )
+
+        # Criando o dicionário com as informações
+        news_data = {
+            "url": url,
+            "title": title,
+            "timestamp": timestamp,
+            "writer": writer,
+            "reading_time": reading_time,
+            "summary": summary,
+            "category": category,
+        }
+
+        return news_data
+    except Exception as e:
+        # Em caso de erro, imprima a exceção para depuração
+        print(f"Error: {e}")
+        return None
 
 
 # Requisito 5
