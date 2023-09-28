@@ -32,6 +32,7 @@ def fetch(url):
 
 # Requisito 2
 def scrape_updates(html_content):
+    # Cria um seletor Parsel a partir do conteúdo HTML
     try:
         selector = (
             Selector(text=html_content)
@@ -39,6 +40,7 @@ def scrape_updates(html_content):
         )
         return selector
     except Exception:
+        # Em caso de erro, retorna uma lista vazia
         return []
 
 
